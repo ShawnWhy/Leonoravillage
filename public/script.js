@@ -24,7 +24,7 @@ window.addEventListener("DOMContentLoaded",function(){
         engine.enableOfflineSupport = false;
         
         var imageMaterial =new BABYLON.StandardMaterial("imageMaterial",scene);
-        imageMaterial.emissiveColor = new BABYLON.Color3(1,.3,0);
+        imageMaterial.emissiveColor = new BABYLON.Color3(1,1,0);
         var sphere = BABYLON.Mesh.CreateSphere("sphere",20,20,scene);
         sphere.position= new BABYLON.Vector3(20, 60, 4);
 
@@ -37,31 +37,31 @@ window.addEventListener("DOMContentLoaded",function(){
 
         camera.attachControl(canvas,true);
 
-        var material = new BABYLON.StandardMaterial("material1",scene)
-        material.diffuseColor =new BABYLON.Color3(0,1,.2);
+        // var material = new BABYLON.StandardMaterial("material1",scene)
+        // material.diffuseColor =new BABYLON.Color3(0,1,.2);
         // material.emissiveColor = new BABYLON.Color3(1,.3,0);
-        material.specularColor = new BABYLON.Color3(0,0,1);
-        material.alpha = .0
+        // material.specularColor = new BABYLON.Color3(0,0,1);
+        // material.alpha = .0
         // material.wireframe=true;
         sphere.material=imageMaterial;
 
 
 
-        sphere.isPickable=true;
+        // sphere.isPickable=true;
 
-        sphere.actionManager = new BABYLON.ActionManager(scene);
-        sphere.actionManager.registerAction(
-            new BABYLON.SetValueAction(
-                {
-                    trigger: BABYLON.ActionManager.OnPickTrigger, 
-                    parameter: ""
-                }, 
-                sphere,
-                "scaling",
-                new BABYLON.Vector3(2, 4, 1.2)
-            )
+        // sphere.actionManager = new BABYLON.ActionManager(scene);
+        // sphere.actionManager.registerAction(
+        //     new BABYLON.SetValueAction(
+        //         {
+        //             trigger: BABYLON.ActionManager.OnPickTrigger, 
+        //             parameter: ""
+        //         }, 
+        //         sphere,
+        //         "scaling",
+        //         new BABYLON.Vector3(2, 4, 1.2)
+        //     )
             
-        );
+        // );
      
 
     
@@ -77,7 +77,7 @@ window.addEventListener("DOMContentLoaded",function(){
         
         BABYLON.Vector3(0,0,0),scene);
 
-        var camera5 = new BABYLON.UniversalCamera("mummycamera",
+        var camera5 = new BABYLON.UniversalCamera("shoecamera",
         
         BABYLON.Vector3(0,0,0),scene);
 
@@ -160,6 +160,9 @@ window.addEventListener("DOMContentLoaded",function(){
             var castleTarp=scene.getMeshByName("CASTLETARP");
             var tarpskeleton = scene.getSkeletonByName("castletarparmature")
             var shoecameralocation = scene.getMeshByName("shoecameralocation")
+            var shoeLightBulb = scene.getMeshByName("shoelightbulb")
+            shoeLightBulb.isPickable=true;
+            shoeLightBulb.material=imageMaterial;
             shoecameralocation.checkCollisions=false;
             var castlecameralocation = scene.getMeshByName("castlecameralocation")
             castlecameralocation.checkCollisions=false;
@@ -232,6 +235,24 @@ window.addEventListener("DOMContentLoaded",function(){
 
                 )
             )
+            shoeLightBulb.actionManager = new BABYLON.ActionManager(scene);
+            shoeLightBulb.actionManager.registerAction(
+                new BABYLON.ExecuteCodeAction(
+                    {
+                    trigger: BABYLON.ActionManager.OnPickTrigger,
+                    parameter:""
+                    },
+                    function(){
+                      
+                        var lightshoe = new BABYLON.PointLight("pointLightshoe",new BABYLON.Vector3(0,0,0),scene);
+
+                        lightshoe.parent = shoeLightBulb;}
+                            
+                        
+                    
+
+                )
+            )
             $(".firstButton").on("click",event=>{
                 scene.activeCamera=camera;
                 camera.attachControl(canvass,true)
@@ -289,13 +310,36 @@ window.addEventListener("DOMContentLoaded",function(){
 
             camera4.rotation.x-=Math.PI/3;
             camera4.minZ = 0;
-            $(".mummybutton").on("click",evemt=>{
+            $(".mummybutton").on("click",event=>{
                 scene.activeCamera=camera4;
                 camera4.attachControl(canvas,true);
                 light.intensity=3;
                 light.range=1;
             
             })
+
+            const bootlocation=shoecameralocation.position;
+            camera5.position=bootlocation
+            camera5.speed=.1
+            // camera5.rotation.y+=Math.PI;
+            camera5.position.x-=12;
+            // camera5.position.z-=8;
+            
+
+            camera5.rotation.y+=Math.PI+Math.PI/6;
+
+            camera5.rotation.x-=Math.PI/3;
+            camera5.minZ = 0;
+            $(".bootbutton").on("click",event=>{
+                scene.activeCamera=camera5;
+                camera5.attachControl(canvas,true);
+                light.intensity=3;
+                light.range=1;
+            
+            })
+
+            scene.activeCamera=camera5;
+            camera5.attachControl(canvas,true);
 
 
         //    scene.animationGroups.forEach(animation=>{
